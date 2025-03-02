@@ -4,7 +4,6 @@ from . import models
 
 app = FastAPI()
 
-# 🚀 This creates the tables in PostgreSQL if they don't exist
 models.Base.metadata.create_all(bind=engine)
 
 
