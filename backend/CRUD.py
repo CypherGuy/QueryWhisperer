@@ -37,7 +37,7 @@ def update_user(db: Session, user_id: int, update_data: schemas.UserUpdate):
     return user
 
 
-def dalete_user(db: Session, user_id: int):
+def delete_user(db: Session, user_id: int):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         return None
