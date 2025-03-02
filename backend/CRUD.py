@@ -1,13 +1,22 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas
 from passlib.context import CryptContext
 
 
 pwd_context = CryptContext(
-    schemes=["sha256_crypt", "bcrypt", "md5_crypt"])
+    schemes=["bcrypt"])
 
 
 def create_user(db: Session, user: schemas.UserCreate):
+    existing_user = db.query(models.User).filter(
+        (models.User.username == user.username) | (
+            models.User.email == user.email)
+    ).first()
+
+    if existing_user:
+        raise HTTPException(status_code=409, detail="User already exists")
+
     new_user = models.User(username=user.username,
                            email=user.email, hashed_password=pwd_context.hash(user.password))
     db.add(new_user)
@@ -17,7 +26,10 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def get_user(db: Session, user_id: int):
-    return db.query(models.User).filter(models.User.id == user_id).first()
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 
 def get_all_users(db: Session):
@@ -27,7 +39,7 @@ def get_all_users(db: Session):
 def update_user(db: Session, user_id: int, update_data: schemas.UserUpdate):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
-        return None
+        raise HTTPException(status_code=404, detail="User not found")
 
     for attr, value in update_data.model_dump(exclude_unset=True).items():
         setattr(user, attr, value)
@@ -40,7 +52,7 @@ def update_user(db: Session, user_id: int, update_data: schemas.UserUpdate):
 def delete_user(db: Session, user_id: int):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
-        return None
+        raise HTTPException(status_code=404, detail="User not found")
     db.delete(user)
     db.commit()
     return user
