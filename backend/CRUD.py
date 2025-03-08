@@ -15,7 +15,8 @@ def create_user(db: Session, user: schemas.UserCreate):
     ).first()
 
     if existing_user:
-        raise HTTPException(status_code=409, detail="User already exists")
+        raise HTTPException(
+            status_code=409, detail="User already exists")  # 🔥 THIS ERROR
 
     new_user = models.User(username=user.username,
                            email=user.email, hashed_password=pwd_context.hash(user.password))

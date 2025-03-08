@@ -1,4 +1,4 @@
-# Run with: PYTHONPATH=$(pwd) pytest backend/tests/test_routes.py -v
+# PYTHONPATH=$(pwd) pytest backend/tests/test_routes.py -v
 
 import pytest
 from fastapi.testclient import TestClient
