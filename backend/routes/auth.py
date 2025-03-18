@@ -84,7 +84,7 @@ async def register_user(user: schemas.UserCreate, db: Session = Depends(get_db_s
     return CRUD.create_user(db=db, user=user)
 
 
-@router.post("/login", response_model=schemas.TokenPair)
+@router.post("/login", response_model=schemas.TokenData)
 async def login_for_access_token(form_data: schemas.UserLogin, db: Session = Depends(get_db_session)):
     user = db.query(models.User).filter(
         models.User.email == form_data.email).first()

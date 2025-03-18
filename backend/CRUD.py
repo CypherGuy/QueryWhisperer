@@ -5,7 +5,8 @@ from passlib.context import CryptContext
 
 
 pwd_context = CryptContext(
-    schemes=["bcrypt"])
+    schemes=["bcrypt"]
+)
 
 
 def create_user(db: Session, user: schemas.UserCreate):
@@ -16,7 +17,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 
     if existing_user:
         raise HTTPException(
-            status_code=409, detail="User already exists")  # 🔥 THIS ERROR
+            status_code=409, detail="User already exists")
 
     new_user = models.User(username=user.username,
                            email=user.email, hashed_password=pwd_context.hash(user.password))
