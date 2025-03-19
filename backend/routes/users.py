@@ -23,14 +23,23 @@ async def get_all_users(db: Session = Depends(get_db_session)):
 
 
 @router.put("/{user_id}", response_model=schemas.UserResponse)
-async def update_user(user_id: int, user_update_schema: schemas.UserUpdate, db: Session = Depends(get_db_session), current_user: models.User = Depends(get_current_user)):
+async def update_user(
+    user_id: int,
+    user_update_schema: schemas.UserUpdate,
+    db: Session = Depends(get_db_session),
+    current_user: models.User = Depends(get_current_user)
+):
     if current_user.id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     return CRUD.update_user(db=db, user_id=user_id, update_data=user_update_schema)
 
 
 @router.delete("/{user_id}", response_model=schemas.UserResponse)
-async def delete_user(user_id: int, db: Session = Depends(get_db_session), current_user: models.User = Depends(get_current_user)):
+async def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db_session),
+    current_user: models.User = Depends(get_current_user)
+):
     if current_user.id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
     return CRUD.delete_user(db=db, user_id=user_id)

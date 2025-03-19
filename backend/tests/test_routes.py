@@ -1,7 +1,5 @@
-# PYTHONPATH=$(pwd) pytest backend/tests/test_routes.py -v
-
-import pytest
 from fastapi.testclient import TestClient
+from backend.tests.test_auth_routes import get_auth_token
 from main import app
 
 client = TestClient(app)
@@ -41,10 +39,13 @@ def test_get_user():
 
 
 def test_update_user():
+    token = get_auth_token()
+    headers = {"Authorization": f"Bearer {token}"}
     global user_id
     response = client.put(
         f"/users/{user_id}",
-        json={"username": "updateduser"}
+        json={"username": "updateduser"},
+        headers=headers
     )
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     data = response.json()
@@ -53,19 +54,19 @@ def test_update_user():
 
 
 def test_delete_user():
+    token = get_auth_token()
+    headers = {"Authorization": f"Bearer {token}"}
     global user_id
-    response = client.delete(f"/users/{user_id}")
+    response = client.delete(f"/users/{user_id}", headers=headers)
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     data = response.json()
     assert data["id"] == user_id
 
 
 def test_get_deleted_user():
+    token = get_auth_token()
+    headers = {"Authorization": f"Bearer {token}"}
     global user_id
-    response = client.get(f"/users/{user_id}")
+    response = client.get(f"/users/{user_id}", headers=headers)
     assert response.status_code == 404, f"Expected 404, got {response.status_code}"
     assert response.json()["detail"] == "User not found"
-
-
-if __name__ == "__main__":
-    pytest.main()
