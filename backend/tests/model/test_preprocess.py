@@ -1,5 +1,5 @@
 import numpy as np
-from backend.Model.preprocess import tokenize, vocab_size
+from preprocess import tokenize, vocab_size
 
 
 def test_tokenize_output_shape():

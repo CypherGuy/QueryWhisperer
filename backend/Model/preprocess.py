@@ -1,4 +1,4 @@
-from backend.Model.dataset import split_into_datasets
+from dataset import split_into_datasets
 import numpy as np
 from transformers import AutoTokenizer
 from typing import Tuple

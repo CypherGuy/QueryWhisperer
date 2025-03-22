@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from backend.Model.preprocess import vocab_size, dimensions
+from preprocess import vocab_size, dimensions
 
 
 class EmbeddingLayer(nn.Module):
