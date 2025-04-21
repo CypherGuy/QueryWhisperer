@@ -5,4 +5,5 @@ __init__.py
 embeddings-basic.py
 wandb/
 backend/Model/
+backend/tests/model/
 trained_model.pth
