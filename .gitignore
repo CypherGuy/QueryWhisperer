@@ -4,3 +4,5 @@ __pycache__/
 __init__.py
 embeddings-basic.py
 wandb/
+backend/Model/
+trained_model.pth
