@@ -1,12 +1,46 @@
-from fastapi import APIRouter
-from backend import schemas
+from fastapi import APIRouter, Depends, HTTPException
+from backend import models, schemas
 from backend.Services.llm_to_sql import text_to_sql
+from backend.routes.auth import get_current_user
 
 router = APIRouter()
 
+DANGEROUS_KEYWORDS: set[str] = {"DROP", "ALTER", "TRUNCATE", "GRANT", "REVOKE"}
+
+
+def contains_dangerous_sql(sql: str) -> bool:
+    return any(word in sql.upper() for word in DANGEROUS_KEYWORDS)
+
 
 @router.post("/query", response_model=schemas.QueryResponse)
-async def query_nl_to_sql(request: schemas.QueryRequest):
-    sql = text_to_sql(request.question, [
-                      t.model_dump() for t in request.db_schema])
-    return schemas.QueryResponse(generated_sql=sql)
+async def nl_to_sql(
+    query_request: schemas.QueryRequest,
+    current_user: models.User = Depends(get_current_user),
+) -> schemas.QueryResponse:
+    """Convert a natural language query to a SQL query."""
+    # Input validation
+    if not query_request.question.strip():
+        raise HTTPException(
+            status_code=400, detail="Question cannot be empty.")
+    if len(query_request.question) > 300:
+        raise HTTPException(status_code=400, detail="Question too long.")
+    if len(query_request.db_schema) > 10:
+        raise HTTPException(
+            status_code=400, detail="Too many tables provided.")
+
+    for table in query_request.db_schema:
+        if len(table.columns) > 50:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Too many columns in table '{table.table}'",
+            )
+
+    generated_sql = text_to_sql(query_request.question, [
+                                table.model_dump() for table in query_request.db_schema])
+
+    if contains_dangerous_sql(generated_sql):
+        raise HTTPException(
+            status_code=400, detail="Query contains disallowed keywords.",
+        )
+
+    return schemas.QueryResponse(generated_sql=generated_sql)
