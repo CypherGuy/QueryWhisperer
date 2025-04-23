@@ -1,22 +1,24 @@
 import os
-from sqlalchemy import create_engine
+from typing import Any, Generator
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
+from sqlalchemy.orm.session import Session
 
 
 load_dotenv()
 
-postgres_password = os.getenv("POSTGRES_PASSWORD")
+postgres_password: str | None = os.getenv("POSTGRES_PASSWORD")
 
-SQLALCHEMY_DATABASE_URL = f"postgresql://postgres:{postgres_password}@localhost:5432/querywhisperer_db"
+SQLALCHEMY_DATABASE_URL: str = f"postgresql://postgres:{postgres_password}@localhost:5432/querywhisperer_db"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine: Engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-def get_db_session():
-    db = SessionLocal()
+def get_db_session() -> Generator[Session, Any, None]:
+    db: Session = SessionLocal()
     try:
         yield db
     finally:
