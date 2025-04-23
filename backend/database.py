@@ -6,13 +6,16 @@ from dotenv import load_dotenv
 from sqlalchemy.orm.session import Session
 
 
-load_dotenv()
+from pathlib import Path
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env.production")
+load_dotenv(dotenv_path="backend/.env.production")
 
 postgres_password: str | None = os.getenv("POSTGRES_PASSWORD")
 
 SQLALCHEMY_DATABASE_URL: str = f"postgresql://postgres:{postgres_password}@localhost:5432/querywhisperer_db"
 
-engine: Engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+engine: Engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
