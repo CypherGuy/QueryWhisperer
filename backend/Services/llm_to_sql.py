@@ -7,10 +7,18 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-def text_to_sql(nl_question: str, db_schema: str = "") -> str:
+def format_schema(tables: list[dict]) -> str:
+    return "\n\n".join(
+        f"Table: {t['table']}\nColumns: {', '.join(t['columns'])}" for t in tables
+    )
+
+
+def text_to_sql(nl_question: str, db_schema: list[dict]) -> str:
+    schema_str = format_schema(db_schema)
     prompt = (
-        "Translate this natural language question to SQL.\n\n"
-        f"Schema:\n{db_schema}\n\n"
+        "Translate this natural language question to SQL. Make the query as simple as possible. I only want the query, no extra messages, speechmarks or backticks.\n\n"
+        f"Example output:\nSELECT * FROM users;\n\n"
+        f"Schema:\n{schema_str}\n\n"
         f"Question:\n{nl_question}\n\nSQL:"
     )
 
