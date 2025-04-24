@@ -46,7 +46,7 @@ export default function LoginPage() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <p className="text-sm text-gray-600">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <a href="/signup" className="text-blue-600 underline">
           Sign up
         </a>
