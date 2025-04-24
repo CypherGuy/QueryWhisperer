@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .database import engine
-from . import models
+from backend.database import engine
+import backend.models as models
 from backend.routes.auth import router as auth_router
 from backend.routes.users import router as users_router
 from backend.routes.query import router as query_router

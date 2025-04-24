@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link"; // ✅ import Link
 
 export default function QueryPage() {
   const [question, setQuestion] = useState("");
@@ -51,6 +52,16 @@ export default function QueryPage() {
     <main className="p-8 max-w-2xl mx-auto space-y-6">
       <h1 className="text-3xl font-bold">Query Your Database</h1>
 
+      {/* Login Button */}
+      <div>
+        <Link
+          href="/login"
+          className="inline-block text-blue-600 underline text-sm"
+        >
+          Log in
+        </Link>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <textarea
           className="w-full border p-2 rounded"
@@ -73,7 +84,6 @@ export default function QueryPage() {
         </button>
       </form>
 
-      {/* ✅ Loading indicator */}
       {loading && !error && (
         <p className="text-gray-500">Generating query...</p>
       )}
