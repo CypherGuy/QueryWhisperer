@@ -7,41 +7,41 @@ export default function QueryPage() {
   const [schemaJson, setSchemaJson] = useState("");
   const [sql, setSql] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setSql("");
+    setLoading(true);
 
     const token = localStorage.getItem("access_token");
     if (!token) {
       setError("You must log in first.");
+      setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/query/query`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            question,
-            db_schema: JSON.parse(schemaJson || "[]"),
-          }),
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/query`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          question,
+          db_schema: JSON.parse(schemaJson || "[]"),
+        }),
+      });
 
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.detail || "Failed to generate SQL.");
-      }
+      if (!res.ok) throw new Error(data.detail || "Failed to generate SQL.");
       setSql(data.generated_sql);
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -70,6 +70,11 @@ export default function QueryPage() {
           Generate SQL
         </button>
       </form>
+
+      {/* ✅ Loading indicator */}
+      {loading && !error && (
+        <p className="text-gray-500">Generating query...</p>
+      )}
 
       {sql && (
         <div className="bg-gray-800 text-white border border-gray-700 p-4 rounded whitespace-pre-wrap">
