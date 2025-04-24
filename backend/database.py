@@ -1,5 +1,5 @@
 import os
-from typing import Generator
+from collections.abc import Generator
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
@@ -16,7 +16,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
-def get_db_session() -> Generator[Session, None]:
+def get_db_session() -> Generator[Session, None, None]:
     db: Session = SessionLocal()
     try:
         yield db
