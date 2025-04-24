@@ -39,13 +39,13 @@ export default function QueryPage() {
       if (!res.ok) throw new Error(data.detail || "Failed to generate SQL.");
       setSql(data.generated_sql);
     } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("An unknown error occurred.");
-        }
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
       }
-      
+    }
+  }
 
   return (
     <main className="p-8 max-w-2xl mx-auto space-y-6">
