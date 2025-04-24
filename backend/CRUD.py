@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from . import models, schemas
+from backend import models, schemas
 from passlib.context import CryptContext
 
 

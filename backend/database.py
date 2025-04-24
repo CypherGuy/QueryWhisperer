@@ -1,5 +1,5 @@
 import os
-from typing import Any, Generator
+from typing import Generator
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
