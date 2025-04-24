@@ -7,9 +7,6 @@ from backend.routes.query import router as query_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-app.include_router(auth_router, prefix="/auth", tags=["Auth"])
-app.include_router(users_router, prefix="/users", tags=["Users"])
-app.include_router(query_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -18,6 +15,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(users_router, prefix="/users", tags=["Users"])
+app.include_router(query_router)
 
 models.Base.metadata.create_all(bind=engine)
 
