@@ -37,6 +37,7 @@ export default function LoginPage() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+
       <input
         type="password"
         placeholder="Password"
@@ -44,6 +45,12 @@ export default function LoginPage() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <p className="text-sm text-gray-600">
+        Don't have an account?{" "}
+        <a href="/signup" className="text-blue-600 underline">
+          Sign up
+        </a>
+      </p>
       <button type="submit" className="bg-black text-white px-4 py-2 w-full">
         Log In
       </button>
