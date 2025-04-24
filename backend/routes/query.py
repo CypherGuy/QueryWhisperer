@@ -35,8 +35,13 @@ async def nl_to_sql(
                 detail=f"Too many columns in table '{table.table}'",
             )
 
-    generated_sql = text_to_sql(query_request.question, [
-                                table.model_dump() for table in query_request.db_schema])
+    key_to_use: str = query_request.api_key or current_user.openai_api_key
+
+    generated_sql: str = text_to_sql(
+        query_request.question,
+        [table.model_dump() for table in query_request.db_schema],
+        key_to_use=key_to_use
+    )
 
     if contains_dangerous_sql(generated_sql):
         raise HTTPException(

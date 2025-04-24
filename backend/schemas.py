@@ -54,6 +54,7 @@ class TableSchema(BaseModel):
 class QueryRequest(BaseModel):
     question: str
     db_schema: List[TableSchema] = []
+    api_key: Optional[str] = None
 
 
 class QueryResponse(BaseModel):

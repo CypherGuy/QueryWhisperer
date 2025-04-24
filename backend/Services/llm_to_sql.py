@@ -1,10 +1,11 @@
 import os
+from typing import Optional
 from dotenv import load_dotenv
-from openai import OpenAI
+from openai import OpenAI, OpenAIError
+from openai.types.chat.chat_completion import ChatCompletion
+from openai.types.chat.chat_completion_message import ChatCompletionMessage
 
 load_dotenv()
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def format_schema(tables: list[dict]) -> str:
@@ -13,24 +14,36 @@ def format_schema(tables: list[dict]) -> str:
     )
 
 
-def text_to_sql(nl_question: str, db_schema: list[dict]) -> str:
-    schema_str = format_schema(db_schema)
-    prompt = (
-        "Translate this natural language question to SQL. Make the query as simple as possible. I only want the query, no extra messages, speechmarks or backticks.\n\n"
+def text_to_sql(
+    nl_question: str,
+    db_schema: list[dict],
+    key_to_use: str
+) -> str:
+    schema_str: str = format_schema(db_schema)
+    prompt: str = (
+        "Translate this natural language question to SQL. Make the query as simple as possible. "
+        "I only want the query, no extra messages, speechmarks or backticks. You must put a semicolon at the end.\n\n"
         f"Example output:\nSELECT * FROM users;\n\n"
         f"Schema:\n{schema_str}\n\n"
         f"Question:\n{nl_question}\n\nSQL:"
     )
 
     try:
-        completion = client.chat.completions.create(
+        if not key_to_use:
+            return "[Error] No OpenAI API key provided."
+
+        client = OpenAI(api_key=key_to_use)
+        completion: ChatCompletion = client.chat.completions.create(
             model="gpt-4o-mini",
             store=True,
             messages=[{"role": "user", "content": prompt}]
         )
-        message = completion.choices[0].message
+        message: ChatCompletionMessage = completion.choices[0].message
         if message and message.content:
             return message.content.strip()
         return "[Error] No SQL response generated."
+
+    except OpenAIError as e:
+        return f"[Error] OpenAI API failure: {str(e)}"
     except Exception as e:
-        return f"[Error] Failed to generate SQL: {str(e)}"
+        return f"[Error] Unexpected failure: {str(e)}"

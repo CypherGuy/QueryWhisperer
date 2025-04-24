@@ -23,7 +23,7 @@ pwd_context = CryptContext(schemes=["bcrypt"])
 
 
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)) -> str:
-    expire = datetime.now(timezone.utc) + expires_delta
+    expire: datetime = datetime.now(timezone.utc) + expires_delta
     data.update({"exp": expire, "user_email": str(data["user_email"])})
     encoded_jwt: str = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
