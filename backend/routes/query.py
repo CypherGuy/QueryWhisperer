@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from backend import models, schemas
+from backend.Security import decrypt_api_key
 from backend.Services.llm_to_sql import text_to_sql
 from backend.routes.auth import get_current_user
 
@@ -35,7 +36,10 @@ async def nl_to_sql(
                 detail=f"Too many columns in table '{table.table}'",
             )
 
-    key_to_use: str = query_request.api_key or current_user.openai_api_key
+    key_to_use: str = (
+        query_request.api_key
+        or decrypt_api_key(current_user.openai_api_key)
+    )
 
     generated_sql: str = text_to_sql(
         query_request.question,

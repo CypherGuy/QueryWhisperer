@@ -47,8 +47,8 @@ export default function LoginPage() {
       />
       <p className="text-sm text-gray-600">
         Don&apos;t have an account?{" "}
-        <a href="/signup" className="text-blue-600 underline">
-          Sign up
+        <a href="/register" className="text-blue-600 underline">
+          Register an account
         </a>
       </p>
       <button type="submit" className="bg-black text-white px-4 py-2 w-full">

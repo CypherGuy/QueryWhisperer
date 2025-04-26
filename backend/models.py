@@ -12,3 +12,4 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, nullable=False,
                        default=True)
+    openai_api_key = Column(String, nullable=True)

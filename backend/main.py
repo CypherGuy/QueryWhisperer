@@ -10,7 +10,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://querywhisperer.up.railway.app"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://querywhisperer.up.railway.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,4 +28,4 @@ models.Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 async def read_root() -> dict[str, str]:
-    return {"message": "Connected to PostgreSQL!"}
+    return {"message": "Connected to PostgreSQL! If you're looking for the frontend, you can find it at https://querywhisperer.up.railway.app"}

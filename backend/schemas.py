@@ -22,6 +22,7 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     password: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
+    openai_api_key: Optional[str] = None
 
 
 class UserResponse(BaseModel):

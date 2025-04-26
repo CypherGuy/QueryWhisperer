@@ -27,19 +27,20 @@ def create_user(db: Session, user: schemas.UserCreate):
     return new_user
 
 
-def get_user(db: Session, user_id: int):
+def get_user(db: Session, user_id: int) -> models.User:
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
 
-def get_all_users(db: Session):
+def get_all_users(db: Session) -> schemas.List[models.User]:
     return db.query(models.User).all()
 
 
-def update_user(db: Session, user_id: int, update_data: schemas.UserUpdate):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
+def update_user(db: Session, user_id: int, update_data: schemas.UserUpdate) -> models.User:
+    user: models.User | None = db.query(models.User).filter(
+        models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -51,8 +52,9 @@ def update_user(db: Session, user_id: int, update_data: schemas.UserUpdate):
     return user
 
 
-def delete_user(db: Session, user_id: int):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
+def delete_user(db: Session, user_id: int) -> models.User:
+    user: models.User | None = db.query(models.User).filter(
+        models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     db.delete(user)
