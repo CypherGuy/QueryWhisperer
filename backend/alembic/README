@@ -1,1 +1,130 @@
-Generic single-database configuration.
+# QueryWhisperer — Backend
+
+The backend service for QueryWhisperer — a schema-aware natural language to SQL converter, built to support OpenAI-based models.  
+Designed for fast, secure, and modular API deployment using FastAPI, SQLAlchemy, and PostgreSQL.
+
+---
+
+## Features
+
+- User authentication (JWT-based)
+- Secure API key management (encrypted storage)
+- Natural language to SQL query generation via OpenAI
+- Schema-aware prompt engineering
+- Danger keyword detection (safety filter on queries)
+- Modular route structure (auth, users, queries)
+- Alembic-powered database migrations
+- Full deployment ready via Railway/Nixpacks
+
+---
+
+## Tech Stack
+
+- FastAPI
+- SQLAlchemy
+- Alembic
+- PostgreSQL
+- OpenAI API (gpt-4o-mini)
+- Cryptography (Fernet encryption)
+- Python 3.11+
+
+---
+
+## Local Setup
+
+1. Clone the repository:
+
+   `git clone https://github.com/yourusername/QueryWhisperer.git`
+
+2. Navigate to the backend directory:
+
+   `cd QueryWhisperer/backend`
+
+3. Create a virtual environment:
+
+   `python3 -m venv venv && source venv/bin/activate`
+
+4. Install dependencies:
+
+   `pip install -r requirements.txt`
+
+5. Set environment variables (create a `.env` file):
+
+   - `DATABASE_URL=your_postgres_url`
+   - `OPENAI_API_KEY=your_openai_key`
+   - `FERNET_SECRET=your_32_byte_base64_secret`
+   - `JWT_SECRET=your_jwt_secret`
+
+6. Run database migrations:
+
+   `alembic upgrade head`
+
+7. Start the server locally:
+
+   `uvicorn backend.main:app --reload`
+
+The backend should now be running at `http://localhost:8000`.
+
+---
+
+## Deployment
+
+The backend is configured for Railway deployment using Nixpacks.
+
+Build + Start commands:
+
+- Build: `pip install -r requirements.txt`
+- Start: `uvicorn backend.main:app --host 0.0.0.0 --port 8000`
+
+Ensure environment variables are set properly in your Railway project dashboard.
+
+---
+
+## Key Environment Variables
+
+- `DATABASE_URL` — PostgreSQL connection string
+- `OPENAI_API_KEY` — Your OpenAI key (fallback if user doesn't provide)
+- `FERNET_SECRET` — Base64-encoded 32-byte secret for API key encryption
+- `JWT_SECRET` — Secret key for JWT token signing
+
+---
+
+## Project Structure
+
+- `backend/main.py` — App initialization, middleware, router setup
+- `backend/routes/` — Organized routes (auth, users, query)
+- `backend/models.py` — SQLAlchemy ORM models
+- `backend/schemas.py` — Pydantic schemas
+- `backend/database.py` — DB engine, session
+- `backend/Security.py` — Encryption helpers
+- `backend/Services/llm_to_sql.py` — OpenAI integration for SQL generation
+- `alembic/` — Database migration versions
+
+---
+
+## API Overview
+
+| Endpoint            | Method | Auth | Description                                  |
+| :------------------ | :----- | :--- | :------------------------------------------- |
+| `/auth/register`    | POST   | No   | Register a new user                          |
+| `/auth/login`       | POST   | No   | Login and receive JWT tokens                 |
+| `/users/openai-key` | PUT    | Yes  | Save user's OpenAI API key                   |
+| `/query`            | POST   | Yes  | Submit a question and schema to generate SQL |
+
+---
+
+## Roadmap (Backend V2)
+
+- Add support for multiple LLM providers (Anthropic, Mistral)
+- Query history per user
+- Role-based access (admin/user)
+- Retry / backoff logic for OpenAI failures
+- Optional rate limiting (per-user API usage)
+
+---
+
+## License
+
+This backend is released under the MIT License.
+
+---
