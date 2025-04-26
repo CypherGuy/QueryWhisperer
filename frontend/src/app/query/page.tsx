@@ -63,7 +63,7 @@ export default function QueryPage() {
       }
 
       setSuccessMessage("API key saved successfully!");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       if (err instanceof Error) {
         setError(err.message);
