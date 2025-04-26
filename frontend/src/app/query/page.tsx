@@ -65,9 +65,14 @@ export default function QueryPage() {
       setSuccessMessage("API key saved successfully!");
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Unknown error occurred.");
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unknown error occurred");
+      }
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -77,14 +82,13 @@ export default function QueryPage() {
     setSql("");
     setLoading(true);
 
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      setError("You must log in first.");
-      setLoading(false);
-      return;
-    }
-
     try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setError("You must log in first.");
+        return;
+      }
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/query`, {
         method: "POST",
         headers: {
@@ -98,11 +102,18 @@ export default function QueryPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "Failed to generate SQL.");
+      if (!res.ok) {
+        throw new Error(data.detail || "Failed to generate SQL.");
+      }
       setSql(data.generated_sql);
       setSuccessMessage("Query generated successfully!");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+    } catch (err) {
+      console.error(err);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Unknown error occurred");
+      }
     } finally {
       setLoading(false);
     }
@@ -112,13 +123,12 @@ export default function QueryPage() {
     <main className="p-8 max-w-2xl mx-auto space-y-6">
       <h1 className="text-3xl font-bold">Query Your Database</h1>
 
-      {/* Notification */}
+      {/* Toast notification */}
       {successMessage && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
           {successMessage}
         </div>
       )}
-
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           {error}
