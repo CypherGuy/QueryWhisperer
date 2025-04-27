@@ -1,5 +1,4 @@
-from backend import models
-from backend.database import Base
+from database import Base
 import os
 from logging.config import fileConfig
 

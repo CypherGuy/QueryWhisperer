@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Body, Depends, HTTPException
 from sqlalchemy.orm import Session
-from backend import CRUD, models, schemas
-from backend.Security import encrypt_api_key
-from backend.routes.auth import get_current_user
-from backend.database import get_db_session
+import CRUD
+import models
+import schemas
+from Security import encrypt_api_key
+from routes.auth import get_current_user
+from database import get_db_session
+
 
 router = APIRouter()
 

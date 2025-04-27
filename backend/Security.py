@@ -1,5 +1,8 @@
-from cryptography.fernet import Fernet
 import os
+from dotenv import load_dotenv
+from cryptography.fernet import Fernet
+
+load_dotenv()
 
 FERNET_SECRET: bytes = os.getenv("FERNET_SECRET_KEY").encode()
 fernet = Fernet(FERNET_SECRET)

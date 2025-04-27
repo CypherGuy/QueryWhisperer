@@ -4,10 +4,13 @@ from jose import JWTError, jwt
 from dotenv import load_dotenv
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from backend.database import get_db_session
-from backend import CRUD, models, schemas
+from database import get_db_session
+import CRUD
+import models
+import schemas
 from fastapi.security import HTTPBearer
 from datetime import datetime, timedelta, timezone
+
 
 oauth2_scheme = HTTPBearer()
 

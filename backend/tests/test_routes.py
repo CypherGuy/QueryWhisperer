@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from backend.tests.test_auth_routes import get_auth_token
+from tests.test_auth_routes import get_auth_token
 from main import app
 
 client = TestClient(app)

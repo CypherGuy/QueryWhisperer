@@ -1,6 +1,8 @@
-from fastapi import HTTPException
+import models
+import schemas
 from sqlalchemy.orm import Session
-from backend import models, schemas
+from fastapi import HTTPException
+
 from passlib.context import CryptContext
 
 

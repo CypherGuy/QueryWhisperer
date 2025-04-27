@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
-from backend import models, schemas
-from backend.Security import decrypt_api_key
-from backend.Services.llm_to_sql import text_to_sql
-from backend.routes.auth import get_current_user
+
+import models
+import schemas
+from Security import decrypt_api_key
+from Services.llm_to_sql import text_to_sql
+from routes.auth import get_current_user
+
 
 router = APIRouter()
 

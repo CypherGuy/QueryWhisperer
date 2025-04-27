@@ -1,5 +1,3 @@
-import os
-from typing import Optional
 from dotenv import load_dotenv
 from openai import OpenAI, OpenAIError
 from openai.types.chat.chat_completion import ChatCompletion
