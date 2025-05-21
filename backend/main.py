@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from database import engine
-import models as models
-from routes.auth import router as auth_router
-from routes.users import router as users_router
-from routes.query import router as query_router
+from backend.database import engine
+from backend import models as mdls
+from backend.routes.auth import router as auth_router
+from backend.routes.users import router as users_router
+from backend.routes.query import router as query_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -23,7 +23,7 @@ app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 app.include_router(users_router, prefix="/users", tags=["Users"])
 app.include_router(query_router)
 
-models.Base.metadata.create_all(bind=engine)
+mdls.Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")

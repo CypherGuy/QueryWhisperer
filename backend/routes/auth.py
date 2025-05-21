@@ -4,10 +4,10 @@ from jose import JWTError, jwt
 from dotenv import load_dotenv
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from database import get_db_session
-import CRUD
-import models
-import schemas
+from backend.database import get_db_session
+import backend.CRUD
+from backend import models
+from backend import schemas
 from fastapi.security import HTTPBearer
 from datetime import datetime, timedelta, timezone
 
@@ -75,7 +75,7 @@ async def refresh_access_token(
 
 @router.post("/register", response_model=schemas.UserResponse)
 async def register_user(user: schemas.UserCreate, db: Session = Depends(get_db_session)) -> models.User:
-    return CRUD.create_user(db=db, user=user)
+    return backend.CRUD.create_user(db=db, user=user)
 
 
 @router.post("/login", response_model=schemas.Token)

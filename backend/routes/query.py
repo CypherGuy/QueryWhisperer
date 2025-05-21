@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 
-import models
-import schemas
-from Security import decrypt_api_key
-from Services.llm_to_sql import text_to_sql
-from routes.auth import get_current_user
+from backend import models
+from backend import schemas
+from backend import Security
+from backend.Services.llm_to_sql import text_to_sql
+from backend.routes.auth import get_current_user
 
 
 router = APIRouter()
@@ -38,10 +38,15 @@ async def nl_to_sql(
                 status_code=400,
                 detail=f"Too many columns in table '{table.table}'",
             )
+    if current_user.openai_api_key is None:
+        raise HTTPException(
+            status_code=400,
+            detail="No OpenAI API key on file. Please save your key before querying."
+        )
 
     key_to_use: str = (
         query_request.api_key
-        or decrypt_api_key(current_user.openai_api_key)
+        or Security.decrypt_api_key(current_user.openai_api_key)
     )
 
     generated_sql: str = text_to_sql(

@@ -1,5 +1,5 @@
-import models
-import schemas
+from backend import models
+from . import schemas
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 

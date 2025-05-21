@@ -1,4 +1,4 @@
-from database import Base
+from backend.database import Base
 import os
 from logging.config import fileConfig
 
