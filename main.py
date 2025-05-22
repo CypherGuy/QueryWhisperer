@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from backend.database import engine
 from backend import models as mdls
@@ -29,3 +30,13 @@ mdls.Base.metadata.create_all(bind=engine)
 @app.get("/")
 async def read_root() -> dict[str, str]:
     return {"message": "Connected to PostgreSQL! If you're looking for the frontend, you can find it at https://querywhisperer.up.railway.app"}
+
+# At the bottom of main.py
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 8000)),
+        reload=False
+    )
