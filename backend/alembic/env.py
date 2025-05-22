@@ -1,20 +1,19 @@
-from database import Base
+from database import Base  # now resolves correctly via sys.path hack
+from alembic import context
+from sqlalchemy import engine_from_config, pool
+from dotenv import load_dotenv
 import os
 import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
-from alembic import context
-from dotenv import load_dotenv
-
-# ensure the parent directory (backend/) is on sys.path so we can import database.py and models.py
+# Ensure project root is on sys.path so we can import database and models
 current_dir = os.path.dirname(__file__)
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+project_root = os.path.dirname(current_dir)
+sys.path.insert(0, project_root)
 
-# load environment variables from backend/.env
-env_path = os.path.join(parent_dir, ".env")
-load_dotenv(dotenv_path=env_path)
+# Load environment variables from .env in project_root
+load_dotenv(dotenv_path=os.path.join(project_root, '.env'))
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -24,22 +23,22 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# override the SQLAlchemy URL section with our DATABASE_URL env var
-config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+# Override the SQLAlchemy URL with our DATABASE_URL env var
+config.set_main_option('sqlalchemy.url', os.getenv('DATABASE_URL'))
 
-# add your model's MetaData object here
+# Add your model's MetaData object here for 'autogenerate' support
 
 target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
-    url = config.get_main_option("sqlalchemy.url")
+    url = config.get_main_option('sqlalchemy.url')
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
-        dialect_opts={"paramstyle": "named"},
+        dialect_opts={'paramstyle': 'named'},
     )
 
     with context.begin_transaction():
@@ -50,7 +49,7 @@ def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+        prefix='sqlalchemy.',
         poolclass=pool.NullPool,
     )
 
