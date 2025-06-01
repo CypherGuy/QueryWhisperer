@@ -14,3 +14,11 @@ def encrypt_api_key(api_key: str) -> str:
 
 def decrypt_api_key(encrypted: str) -> str:
     return fernet.decrypt(encrypted.encode()).decode()
+
+
+def encrypt_email(email: str) -> str:
+    return fernet.encrypt(email.encode()).decode()
+
+
+def decrypt_email(encrypted: str) -> str:
+    return fernet.decrypt(encrypted.encode()).decode()

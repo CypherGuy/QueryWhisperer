@@ -31,7 +31,6 @@ mdls.Base.metadata.create_all(bind=engine)
 async def read_root() -> dict[str, str]:
     return {"message": "Connected to PostgreSQL! If you're looking for the frontend, you can find it at https://querywhisperer.up.railway.app"}
 
-# At the bottom of main.py
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(

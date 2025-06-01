@@ -102,20 +102,22 @@ async def login_for_access_token(form_data: schemas.UserLogin, db: Session = Dep
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db_session)) -> models.User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Could not validate credentials. Please log in again.",
         headers={"WWW-Authenticate": "Bearer"},
     )
     # Extract token string from the OAuth2 schemad
     token = token.credentials
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload: dict[str, Any] = jwt.decode(
+            token, SECRET_KEY, algorithms=[ALGORITHM])
         user_email = payload.get("user_email")
         if user_email is None:
             raise credentials_exception
-        user = db.query(models.User).filter(
+        user: models.User | None = db.query(models.User).filter(
             models.User.email == user_email).first()
         if user is None:
             raise credentials_exception
+
         token_expiry = payload.get("exp")
         if token_expiry is None or token_expiry < int(datetime.now(timezone.utc).timestamp()):
             raise HTTPException(

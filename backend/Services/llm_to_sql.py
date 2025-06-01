@@ -15,6 +15,7 @@ def format_schema(tables: list[dict]) -> str:
 def text_to_sql(
     nl_question: str,
     db_schema: list[dict],
+    user_hashed_email: str,
     key_to_use: str
 ) -> str:
     schema_str: str = format_schema(db_schema)
@@ -34,8 +35,10 @@ def text_to_sql(
         completion: ChatCompletion = client.chat.completions.create(
             model="gpt-4o-mini",
             store=True,
-            messages=[{"role": "user", "content": prompt}]
-        )
+            messages=[{"role": "user", "content": prompt}],
+            max_completion_tokens=500,
+            n=1,
+            user=user_hashed_email)
         message: ChatCompletionMessage = completion.choices[0].message
         if message and message.content:
             return message.content.strip()

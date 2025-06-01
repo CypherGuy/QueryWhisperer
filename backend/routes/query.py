@@ -9,7 +9,8 @@ from backend.routes.auth import get_current_user
 
 router = APIRouter()
 
-DANGEROUS_KEYWORDS: set[str] = {"DROP", "ALTER", "TRUNCATE", "GRANT", "REVOKE"}
+DANGEROUS_KEYWORDS: set[str] = {"DROP", "ALTER",
+                                "TRUNCATE", "GRANT", "REVOKE", "DELETE"}
 
 
 def contains_dangerous_sql(sql: str) -> bool:
@@ -27,16 +28,17 @@ async def nl_to_sql(
         raise HTTPException(
             status_code=400, detail="Question cannot be empty.")
     if len(query_request.question) > 300:
-        raise HTTPException(status_code=400, detail="Question too long.")
+        raise HTTPException(
+            status_code=400, detail="Question too long, your limit is 300 characters.")
     if len(query_request.db_schema) > 10:
         raise HTTPException(
-            status_code=400, detail="Too many tables provided.")
+            status_code=400, detail="Too many tables provided, your limit is 10.")
 
     for table in query_request.db_schema:
         if len(table.columns) > 50:
             raise HTTPException(
                 status_code=400,
-                detail=f"Too many columns in table '{table.table}'",
+                detail=f"Too many columns in table '{table.table}', your limit is 50.",
             )
     if current_user.openai_api_key is None:
         raise HTTPException(
@@ -49,10 +51,16 @@ async def nl_to_sql(
         or Security.decrypt_api_key(current_user.openai_api_key)
     )
 
+    hashed_email: str = Security.encrypt_email(current_user.email)
+    if query_request.api_key and Security.decrypt_email(hashed_email) != current_user.email:
+        raise HTTPException(status_code=403, detail="Invalid API key.")
+
     generated_sql: str = text_to_sql(
         query_request.question,
         [table.model_dump() for table in query_request.db_schema],
-        key_to_use=key_to_use
+        hashed_email,
+        key_to_use=key_to_use,
+
     )
 
     if contains_dangerous_sql(generated_sql):

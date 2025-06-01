@@ -65,11 +65,7 @@ export default function QueryPage() {
       setSuccessMessage("API key saved successfully!");
     } catch (err) {
       console.error(err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Unknown error occurred");
-      }
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
     } finally {
       setSaving(false);
     }
@@ -109,11 +105,7 @@ export default function QueryPage() {
       setSuccessMessage("Query generated successfully!");
     } catch (err) {
       console.error(err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Unknown error occurred");
-      }
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
     } finally {
       setLoading(false);
     }
@@ -121,8 +113,14 @@ export default function QueryPage() {
 
   return (
     <main className="p-8 max-w-2xl mx-auto space-y-6">
+      <button
+        onClick={() => (window.location.href = "/login")}
+        className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 float-right"
+      >
+        Log In
+      </button>
       <h1 className="text-3xl font-bold">Query Your Database</h1>
-
+      <p>Ask questions about your database schema and generate SQL queries.</p>
       {/* Toast notification */}
       {successMessage && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
@@ -140,7 +138,7 @@ export default function QueryPage() {
         <input
           type="password"
           placeholder="sk-..."
-          className="border p-2 w-full"
+          className="border p-2 w-full placeholder-gray-500"
           onChange={(e) => setApiKey(e.target.value)}
         />
         <button
@@ -155,13 +153,13 @@ export default function QueryPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <textarea
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded placeholder-gray-500"
           placeholder="Natural language question"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
         <textarea
-          className="w-full border p-2 rounded"
+          className="w-full border p-2 rounded placeholder-gray-500"
           placeholder='Schema as JSON (e.g. [{"table":"users","columns":["id","name"]}])'
           value={schemaJson}
           onChange={(e) => setSchemaJson(e.target.value)}
@@ -177,7 +175,7 @@ export default function QueryPage() {
       </form>
 
       {sql && (
-        <div className="bg-gray-800 text-white border border-gray-700 p-4 rounded whitespace-pre-wrap">
+        <div className="bg-gray-800 text-gray-100 border border-gray-700 p-4 rounded whitespace-pre-wrap">
           <h2 className="font-semibold mb-2">Generated SQL:</h2>
           {sql}
         </div>
