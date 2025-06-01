@@ -156,8 +156,8 @@ export default function HomePage() {
                 Ask Your Question
               </h3>
               <p className="text-gray-300 text-sm leading-relaxed">
-                Type your question in plain English, like "Show me all users who
-                signed up last month"
+                Type your question in plain English, like &quotShow me all users
+                who signed up last month&quot
               </p>
             </div>
             <div className="text-center">
@@ -282,7 +282,7 @@ ORDER BY o.order_total DESC;`}
             Ready to Get Started?
           </h2>
           <p className="text-gray-300 mb-4">
-            You'll need to{" "}
+            You&apos;ll need to{" "}
             <Link
               href="/login"
               className="text-white hover:underline font-medium"
@@ -314,7 +314,7 @@ ORDER BY o.order_total DESC;`}
                 />
               </svg>
               <span>
-                <strong>Note:</strong> You'll need a schema (table + column
+                <strong>Note:</strong> You&apos;ll need a schema (table + column
                 names) to generate accurate results.
               </span>
             </p>

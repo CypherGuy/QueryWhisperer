@@ -34,6 +34,7 @@ export default function LoginPage() {
       window.location.href = "/query";
     } catch (err) {
       setError("An error occurred. Please try again.");
+      console.error("Login error:", err);
     } finally {
       setIsLoading(false);
     }
