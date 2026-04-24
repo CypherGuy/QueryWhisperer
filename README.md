@@ -80,5 +80,4 @@ You can deploy the frontend, backend and DB together on [Railway](https://railwa
 
 ## Live Demo
 
-🔗 https://querywhisperer.up.railway.app  
-🔗 https://github.com/CypherGuy/QueryWhisperer
+https://querywhisperer.up.railway.app  
