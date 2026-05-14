@@ -30,7 +30,6 @@ def test_get_all_users():
 
 
 def test_get_user():
-    global user_id
     response = client.get(f"/users/{user_id}")
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     data = response.json()
@@ -41,7 +40,6 @@ def test_get_user():
 def test_update_user():
     token = get_auth_token()
     headers = {"Authorization": f"Bearer {token}"}
-    global user_id
     response = client.put(
         f"/users/{user_id}",
         json={"username": "updateduser"},
@@ -56,7 +54,6 @@ def test_update_user():
 def test_delete_user():
     token = get_auth_token()
     headers = {"Authorization": f"Bearer {token}"}
-    global user_id
     response = client.delete(f"/users/{user_id}", headers=headers)
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     data = response.json()
@@ -66,7 +63,6 @@ def test_delete_user():
 def test_get_deleted_user():
     token = get_auth_token()
     headers = {"Authorization": f"Bearer {token}"}
-    global user_id
     response = client.get(f"/users/{user_id}", headers=headers)
     assert response.status_code == 404, f"Expected 404, got {response.status_code}"
     assert response.json()["detail"] == "User not found"
