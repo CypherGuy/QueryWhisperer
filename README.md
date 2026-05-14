@@ -1,4 +1,4 @@
-# QueryWhisperer (WIP)
+# QueryWhisperer
 
 QueryWhisperer is a full-stack web app that converts natural language into SQL queries using user-defined database schemas and a modular LLM-powered backend.
 
@@ -10,7 +10,7 @@ QueryWhisperer is a full-stack web app that converts natural language into SQL q
 - Modular, model-agnostic backend designed for easy extensibility
 - Full-stack deployment (frontend + backend + PostgreSQL)
 - JSON-based schema upload
-- LLM-generated SQL output only (execution planned)
+- SQL execution and result display
 
 ## Tech Stack
 
